@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  vtw-log4j-configure:
+    image: 461549540087.dkr.ecr.eu-west-1.amazonaws.com/vtw-file-downloader:file-downloader
+    environment:
+      - "APP_NAME=vtw"
+      - "BUCKET_NAME=tejas-test"
+    volumes:
+      - C:/Users/sing22/.aws:/root/.aws
+      - log4j-location:/usr/local/application/contributor
+  vtw-contributor-api:
+    build: .
+    ports:
+      - "4000:8080"
+    volumes:
+      - C:/Users/sing22/.aws:/root/.aws
+      - log4j-location:/usr/local/application/contributor
+    environment:
+      - "VTWENV=DEVNP"
+      - "ELSENV=DEVNP"
+      - "EFENV=DEVNP"
+      - "JAVA_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -Dlog4j.configurationFile=file:/usr/local/application/contributor/log4j2.xml -Dlog4j2.debug"
+      #- "AWS_ACCESS_KEY_ID=ASIAWW5T7CL36RAHXQEY"
+      #- "AWS_SECRET_ACCESS_KEY=SrKrgTcoX3XshS+Txjlb/654Omj1syy5fDYJdgvJ"
+      #- "AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}"
+    #depends_on:
+#      - vtw-log4j-configure
+volumes:
+  log4j-location:
